@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
+
 from odoo import fields, models
 
 
-class ResUser(models.Model):
+class ResPartner(models.Model):
     _inherit = "res.partner"
-    birthday = fields.Date()
-    age = fields.Char()
 
-
+    mobile = fields.Char()
+    reminder_question = fields.Char()
+    reminder_answer = fields.Char()
+    #last_name = fields.Char()
+    #middle_name = fields.Char()
+    #username = fields.Char()

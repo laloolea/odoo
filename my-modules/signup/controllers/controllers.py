@@ -2,6 +2,7 @@
 
 import logging
 import werkzeug
+from datetime import datetime
 from odoo import http, _
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 from odoo.addons.auth_signup.models.res_users import SignupError
@@ -14,9 +15,8 @@ _logger = logging.getLogger(__name__)
 class AuthSignupHome(AuthSignupHome):
     def do_signup(self, qcontext):
         """ Shared helper that creates a res.partner out of a token """
-        values = {key: qcontext.get(key) for key in ('login', 'name', 'password', 'phone', 'mobile', 'street',
-                                                     'zip', 'city', 'state_id', 'country_id', 'birthday')}
-        values.update({'country_id': int(qcontext.get('country_id'))})
+        values = {key: qcontext.get(key) for key in ('login', 'name', 'password',
+                                                     'reminder_question', 'reminder_answer')}
         if not values:
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
@@ -31,8 +31,6 @@ class AuthSignupHome(AuthSignupHome):
     @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
-        qcontext['states'] = request.env['res.country.state'].sudo().search([])
-        qcontext['countries'] = request.env['res.country'].sudo().search([])
 
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
@@ -63,5 +61,3 @@ class AuthSignupHome(AuthSignupHome):
         response = request.render('auth_signup.signup', qcontext)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
-
-

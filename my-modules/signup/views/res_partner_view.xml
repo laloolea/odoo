@@ -7,7 +7,13 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='function']" position="after">
-                     <field name="birthday" attrs="{'invisible':[('company_type','=','company')]}"/>
+                     <field name="reminder_question" />
+                     <field name="reminder_answer" />
+
+                   <!--  <field name="last_name" />
+                     <field name="middle_name" />
+                     <field name="username" />
+                     -->
                 </xpath>
             </field>
         </record>
